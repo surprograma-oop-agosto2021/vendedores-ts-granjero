@@ -1,0 +1,25 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  test:
+    name: Compilar y ejecutar pruebas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+      - run: npm ci
+      - run: npx jest --ci --reporters=default --reporters=jest-junit
+      - uses: reviewdog/action-eslint@v1
+        if: always()
+      - uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Reporte de pruebas
+          path: reports/jest-*.xml
+          reporter: jest-junit
