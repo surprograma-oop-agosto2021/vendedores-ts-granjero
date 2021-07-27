@@ -47,7 +47,8 @@ export class ComercioCorresponsal extends Vendedor {
   }
 }
 
-export class Provincia {}
+export class Provincia {
+}
 
 export class Ciudad {
   constructor(public provincia: Provincia) {}
