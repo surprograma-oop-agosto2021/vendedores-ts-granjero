@@ -1,9 +1,13 @@
 import { Ciudad, Provincia, VendedorFijo, Viajante } from "./vendedores";
 
 describe("Vendedores", () => {
-  const buenosAires = new Provincia();
-  const tucuman = new Provincia();
+	//Provincias
+  const buenosAires = new Provincia(1000);
+  const tucuman = new Provincia(3000);
+  const salta = new Provincia(5000);
+	//Ciudades
   const sierra = new Ciudad(buenosAires);
+  const suipacha = new Ciudad(buenosAires);
   const tafiDelValle = new Ciudad(tucuman);
 
   describe("1 - puede trabajar", () => {
@@ -20,7 +24,7 @@ describe("Vendedores", () => {
     });
 
     describe("viajante", () => {
-      const viajante = new Viajante([tucuman]);
+      const viajante = new Viajante([tucuman, salta]);
 
       it("una ciudad que queda en una provincia donde trabaja", () => {
         expect(viajante.puedeTrabajarEn(tafiDelValle)).toBeTruthy();
