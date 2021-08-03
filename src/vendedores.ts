@@ -1,4 +1,4 @@
-import { any } from "ramda";
+import { any, sum } from "ramda";
 
 // Clase Vendedor
 abstract class Vendedor {
@@ -28,24 +28,28 @@ export class Viajante extends Vendedor {
 	constructor(public provinciasDondeTrabaja: Provincia[]) {
 		super();
 	}
-// ??? Qué hace any() ???
+// any es una funcion de ramda
 	puedeTrabajarEn(ciudad: Ciudad): boolean {
 		return any((p) => p == ciudad.provincia, this.provinciasDondeTrabaja);  
 	}
 
+	// true si la población sumanda de las provincias donde está habilitado >= 10 millones.
 	vendedorInfuyente(): boolean {
-		return  false;
+		let poblacionSumada = 0;
+		this.provinciasDondeTrabaja.forEach(provincia => poblacionSumada += provincia.poblacion);
+		
+		return poblacionSumada >= 10 ? true : false;
 	}
 }
 
 // Clase ComercioCorresponsal: 
 export class ComercioCorresponsal extends Vendedor {
-	constructor(public provinciasDondeTrabaja: Provincia[]) {
+	constructor(public tieneSucursalEn: Ciudad[]) {
 		super();
 	}
 
 	puedeTrabajarEn(ciudad: Ciudad): boolean {
-		return any((p) => p == ciudad.provincia, this.provinciasDondeTrabaja);
+		return any((p) => p == ciudad, this.tieneSucursalEn);
 	}
 
 	vendedorInfuyente(): boolean {
