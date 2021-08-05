@@ -1,12 +1,12 @@
-import { any, sum } from "ramda";
+import { find, any, sum, props } from "ramda";
 
-// Clase Vendedor
+// ⚡️⚡️Clase Vendedor
 abstract class Vendedor {
   abstract puedeTrabajarEn(ciudad: Ciudad): boolean;
   abstract vendedorInfuyente(): boolean; // jm
 }
 
-// Clase VendedorFijo: se sabe en qué ciudad vive.
+// ⚡️Clase VendedorFijo: se sabe en qué ciudad vive.
 // No puede ser VendedorInfluyente
 export class VendedorFijo extends Vendedor {
   constructor(public ciudadOrigen: Ciudad) {
@@ -23,11 +23,12 @@ export class VendedorFijo extends Vendedor {
   }
 }
 
-// Clase Viajante: cada viajante está habilitado para trabajar en algunas provincias, se sabe cuáles son.
+// ⚡️Clase Viajante: cada viajante está habilitado para trabajar en algunas provincias, se sabe cuáles son.
 export class Viajante extends Vendedor {
   constructor(public provinciasDondeTrabaja: Provincia[]) {
     super();
   }
+
   // any es una funcion de ramda
   puedeTrabajarEn(ciudad: Ciudad): boolean {
     return any((p) => p == ciudad.provincia, this.provinciasDondeTrabaja);
@@ -36,6 +37,7 @@ export class Viajante extends Vendedor {
   // true si la población sumanda de las provincias donde está habilitado >= 10 millones.
   vendedorInfuyente(): boolean {
     let poblacionSumada = 0;
+    // 🦆?
     this.provinciasDondeTrabaja.forEach(
       (provincia) => (poblacionSumada += provincia.poblacion)
     );
@@ -44,7 +46,7 @@ export class Viajante extends Vendedor {
   }
 }
 
-// Clase ComercioCorresponsal:
+// ⚡️Clase ComercioCorresponsal:
 export class ComercioCorresponsal extends Vendedor {
   constructor(public tieneSucursalEn: Ciudad[]) {
     super();
@@ -55,19 +57,31 @@ export class ComercioCorresponsal extends Vendedor {
   }
 
   vendedorInfuyente(): boolean {
-    const sucursales = this.tieneSucursalEn;
+		const listaPcias: string[] = [];
+		for (const sucursal of this.tieneSucursalEn)
+		{
+			if( !any((p) => p == sucursal.provincia.nombre, listaPcias) )
+				{
+					listaPcias.push(sucursal.provincia.nombre);
+				}
+		}
 
-    if (sucursales.length >= 5) {
+			console.log(listaPcias);
+
+		// primera condicion
+    if (this.tieneSucursalEn.length >= 5 || listaPcias.length >= 3) {
       return true;
     }
     return false;
   }
 }
 
+// ⚡️⚡️
 export class Provincia {
-  constructor(public poblacion: number) {}
+  constructor(public poblacion: number, public nombre: string) {}
 }
 
+// ⚡️⚡️
 export class Ciudad {
-  constructor(public provincia: Provincia) {}
+  constructor(public provincia: Provincia, public nombre: string) {}
 }

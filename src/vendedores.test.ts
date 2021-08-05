@@ -8,20 +8,20 @@ import {
 
 describe("Vendedores", () => {
   //Provincias
-  const buenosAires = new Provincia(8);
-  const tucuman = new Provincia(2);
-  const salta = new Provincia(3);
-  const cordoba = new Provincia(5);
+  const buenosAires = new Provincia(8, 'Buenos Aires');
+  const tucuman = new Provincia(2, 'Tucuman');
+  const salta = new Provincia(3, 'Salta');
+  const cordoba = new Provincia(5, 'Cordoba');
   //Ciudades
-  const sierra = new Ciudad(buenosAires);
-  const suipacha = new Ciudad(buenosAires);
-  const laPlata = new Ciudad(buenosAires);
-  const tafiDelValle = new Ciudad(tucuman);
-  const concepcion = new Ciudad(tucuman);
-  const yerbaBuena = new Ciudad(tucuman);
-  const cafayate = new Ciudad(salta);
-  const laMerced = new Ciudad(salta);
-  const tartagal = new Ciudad(salta);
+  const sierra = new Ciudad(buenosAires, 'Sierra');
+  const suipacha = new Ciudad(buenosAires, 'Suipacha');
+  const laPlata = new Ciudad(buenosAires, 'La Ptata');
+  const tafiDelValle = new Ciudad(tucuman, 'Tafi del Valle');
+  const concepcion = new Ciudad(tucuman, 'Concepcion');
+  const yerbaBuena = new Ciudad(tucuman, 'Yerba Buena');
+  const cafayate = new Ciudad(salta, 'Cafayate');
+  const laMerced = new Ciudad(salta, 'La Merced');
+  const tartagal = new Ciudad(salta, 'Tartagal');
 
   describe("1 - puede trabajar", () => {
     describe("vendedor fijo", () => {
@@ -57,7 +57,7 @@ describe("Vendedores", () => {
     });
 
     describe("comercio corresponsal", () => {
-      const corresponsal = new ComercioCorresponsal([suipacha, cafayate]);
+      const corresponsal = new ComercioCorresponsal([suipacha, cafayate, laPlata]);
 
       it("una ciudad que queda en una provincia donde trabaja", () => {
         expect(corresponsal.puedeTrabajarEn(suipacha)).toBeTruthy();
@@ -69,6 +69,22 @@ describe("Vendedores", () => {
 
       it("es influyente", () => {
         expect(corresponsal.vendedorInfuyente()).toBeFalsy();
+      });
+    });
+
+    describe("comercio corresponsal INFLUYENTE", () => {
+      const corresponsal = new ComercioCorresponsal([concepcion, suipacha, cafayate, laPlata]);
+
+      it("una ciudad que queda en una provincia donde trabaja", () => {
+        expect(corresponsal.puedeTrabajarEn(suipacha)).toBeTruthy();
+      });
+
+      it("una ciudad que queda en una provincia donde no trabaja", () => {
+        expect(corresponsal.puedeTrabajarEn(sierra)).toBeFalsy();
+      });
+
+      it("es influyente", () => {
+        expect(corresponsal.vendedorInfuyente()).toBeTruthy();
       });
     });
   });
