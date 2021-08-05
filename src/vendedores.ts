@@ -57,18 +57,16 @@ export class ComercioCorresponsal extends Vendedor {
   }
 
   vendedorInfuyente(): boolean {
-		const listaPcias: string[] = [];
-		for (const sucursal of this.tieneSucursalEn)
-		{
-			if( !any((p) => p == sucursal.provincia.nombre, listaPcias) )
-				{
-					listaPcias.push(sucursal.provincia.nombre);
-				}
-		}
+    const listaPcias: string[] = [];
+    for (const sucursal of this.tieneSucursalEn) {
+      if (!any((p) => p == sucursal.provincia.nombre, listaPcias)) {
+        listaPcias.push(sucursal.provincia.nombre);
+      }
+    }
 
-			console.log(listaPcias);
+    console.log(listaPcias);
 
-		// primera condicion
+    // primera condicion
     if (this.tieneSucursalEn.length >= 5 || listaPcias.length >= 3) {
       return true;
     }
