@@ -4,6 +4,7 @@ import {
   VendedorFijo,
   Viajante,
   ComercioCorresponsal,
+	CertificacionesVendedor,
 } from "./vendedores";
 
 describe("Vendedores", () => {
@@ -22,6 +23,8 @@ describe("Vendedores", () => {
   const cafayate = new Ciudad(salta, "Cafayate");
   const laMerced = new Ciudad(salta, "La Merced");
   const tartagal = new Ciudad(salta, "Tartagal");
+	//Certificaciones
+	const certificacionesViajante = new CertificacionesVendedor(3,3);
 
   describe("1 - puede trabajar", () => {
     describe("vendedor fijo", () => {
@@ -41,7 +44,7 @@ describe("Vendedores", () => {
     });
 
     describe("viajante", () => {
-      const viajante = new Viajante([tucuman, salta, cordoba]);
+      const viajante = new Viajante([tucuman, salta, cordoba], certificacionesViajante);
 
       it("una ciudad que queda en una provincia donde trabaja", () => {
         expect(viajante.puedeTrabajarEn(tafiDelValle)).toBeTruthy();
@@ -53,6 +56,10 @@ describe("Vendedores", () => {
 
       it("es influyente", () => {
         expect(viajante.vendedorInfuyente()).toBeTruthy();
+      });
+
+      it("es versatil", () => {
+        expect(viajante.vendedorVersatil()).toBeTruthy();
       });
     });
 
@@ -71,7 +78,7 @@ describe("Vendedores", () => {
         expect(corresponsal.puedeTrabajarEn(sierra)).toBeFalsy();
       });
 
-      it("es influyente", () => {
+      it("no influyente", () => {
         expect(corresponsal.vendedorInfuyente()).toBeFalsy();
       });
     });

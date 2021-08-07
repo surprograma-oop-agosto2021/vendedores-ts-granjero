@@ -4,6 +4,8 @@ import { find, any, sum, props } from "ramda";
 abstract class Vendedor {
   abstract puedeTrabajarEn(ciudad: Ciudad): boolean;
   abstract vendedorInfuyente(): boolean; // jm
+  abstract vendedorVersatil(): boolean; // jm
+  abstract vendedorFirme(): boolean; // jm
 }
 
 // ⚡️Clase VendedorFijo: se sabe en qué ciudad vive.
@@ -21,11 +23,19 @@ export class VendedorFijo extends Vendedor {
   vendedorInfuyente(): boolean {
     return false;
   }
+	
+  vendedorVersatil(): boolean {
+    return false;
+  }
+	
+  vendedorFirme(): boolean {
+    return false;
+  }
 }
 
 // ⚡️Clase Viajante: cada viajante está habilitado para trabajar en algunas provincias, se sabe cuáles son.
 export class Viajante extends Vendedor {
-  constructor(public provinciasDondeTrabaja: Provincia[]) {
+  constructor(public provinciasDondeTrabaja: Provincia[], public certificaciones: CertificacionesVendedor) {
     super();
   }
 
@@ -41,8 +51,27 @@ export class Viajante extends Vendedor {
     this.provinciasDondeTrabaja.forEach(
       (provincia) => (poblacionSumada += provincia.poblacion)
     );
+    return poblacionSumada >= 10;
+  }
+	
+  vendedorVersatil(): boolean {
+		// me encantaria hacer algo así como:
+		// let totalCertificaciones = sum(this.certificaciones)
+		// pero no termino de entender como.
+		console.log(this.certificaciones);
+		const totalCertificaciones = this.certificaciones.certProducto + this.certificaciones.certVentas;
 
-    return poblacionSumada >= 10 ? true : false;
+
+		if (this.certificaciones.certProducto)
+			{
+				return true;
+			}
+    return true;
+  }
+	
+	
+  vendedorFirme(): boolean {
+    return false;
   }
 }
 
@@ -63,15 +92,28 @@ export class ComercioCorresponsal extends Vendedor {
         listaPcias.push(sucursal.provincia.nombre);
       }
     }
-
-    console.log(listaPcias);
-
-    // primera condicion
-    if (this.tieneSucursalEn.length >= 5 || listaPcias.length >= 3) {
-      return true;
-    }
+		return (this.tieneSucursalEn.length >= 5 || listaPcias.length >= 3);
+  }
+	
+  vendedorVersatil(): boolean {
     return false;
   }
+	
+
+  vendedorFirme(): boolean {
+    return false;
+  }
+}
+
+
+// ⚡️⚡️
+export class CertificacionesVendedor {
+	constructor (public certProducto: number, public certVentas: number){}
+}
+
+// ⚡️⚡️
+export class CentroDeDistribucion {
+	constructor (public ciudad: Ciudad, public vendedores: Vendedor[]){}
 }
 
 // ⚡️⚡️
