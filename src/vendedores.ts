@@ -154,17 +154,17 @@ export class CentroDeDistribucion {
     }
   }
 
-	vendedorEstrella(): string {
-		return 'raul';
-	}
+  vendedorEstrella(): string {
+    return "raul";
+  }
 
-	coberturaEnCiudad(): boolean {
-			return true;
-	}
+  coberturaEnCiudad(): boolean {
+    return true;
+  }
 
-	vendedoresGenéricos(): string[]  {
-		return ['vendedor1'];
-	}
+  vendedoresGenéricos(): string[] {
+    return ["vendedor1"];
+  }
 }
 
 // ⚡️⚡️
