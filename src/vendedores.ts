@@ -4,9 +4,23 @@ import { find, any, sum, props } from "ramda";
 abstract class Vendedor {
   abstract puedeTrabajarEn(ciudad: Ciudad): boolean;
   abstract vendedorInfuyente(): boolean; // jm
-  abstract vendedorVersatil(): boolean; // jm
-  abstract vendedorFirme(): boolean; // jm
+
+  vendedorVersatil(): boolean {
+    return (
+      sum(Object.values(this.certificaciones)) >= 3 && // suma de la cantidad de certificaciones
+      this.certificaciones.certProducto >= 1 && // si hay al menos una certificacion de producto
+      sum(Object.values(this.certificaciones).slice(1)) >= 1 // si hay al menos otra certificacion
+    );
+  }
+
+  vendedorFirme(): boolean {
+    // Cada certificacion otorga 5 puntos.
+    // las certificaciones sumadas multiplicadas por 5 deben llegar a 30
+    return sum(Object.values(this.certificaciones)) * 5 >= 30;
+  }
+
   abstract nombre: string;
+  abstract certificaciones: CertificacionesVendedor;
 }
 
 // ⚡️Clase VendedorFijo: se sabe en qué ciudad vive.
@@ -27,29 +41,6 @@ export class VendedorFijo extends Vendedor {
 
   vendedorInfuyente(): boolean {
     return false;
-  }
-
-  vendedorVersatil(): boolean {
-    // no estoy muy orgulloso del coódigo que sigue.
-    // me encantaria hacer algo así como:
-    // let totalCertificaciones = sum(this.certificaciones)
-    // pero no termino de entender como hacer para iterar sobre this.certificaciones
-    // para sumar los valores de certVentas y certProducto
-    const totalCertificaciones =
-      this.certificaciones.certProducto + this.certificaciones.certVentas;
-    return (
-      totalCertificaciones >= 3 &&
-      this.certificaciones.certProducto >= 1 &&
-      this.certificaciones.certVentas >= 1
-    );
-  }
-
-  vendedorFirme(): boolean {
-    // Cada certificacion otorga 5 puntos.
-    const totalCertificaciones =
-      this.certificaciones.certProducto * 5 +
-      this.certificaciones.certVentas * 5;
-    return totalCertificaciones >= 30;
   }
 }
 
@@ -77,34 +68,15 @@ export class Viajante extends Vendedor {
     );
     return poblacionSumada >= 10;
   }
-
-  vendedorVersatil(): boolean {
-    // no estoy muy orgulloso del coódigo que sigue.
-    // me encantaria hacer algo así como:
-    // let totalCertificaciones = sum(this.certificaciones)
-    // pero no termino de entender como hacer para iterar sobre this.certificaciones
-    // para sumar los valores de certVentas y certProducto
-    const totalCertificaciones =
-      this.certificaciones.certProducto + this.certificaciones.certVentas;
-    return (
-      totalCertificaciones >= 3 &&
-      this.certificaciones.certProducto >= 1 &&
-      this.certificaciones.certVentas >= 1
-    );
-  }
-
-  vendedorFirme(): boolean {
-    // Cada certificacion otorga 5 puntos.
-    const totalCertificaciones =
-      this.certificaciones.certProducto * 5 +
-      this.certificaciones.certVentas * 5;
-    return totalCertificaciones >= 30;
-  }
 }
 
 // ⚡️Clase ComercioCorresponsal:
 export class ComercioCorresponsal extends Vendedor {
-  constructor(public nombre: string, public tieneSucursalEn: Ciudad[]) {
+  constructor(
+    public nombre: string,
+    public tieneSucursalEn: Ciudad[],
+    public certificaciones: CertificacionesVendedor
+  ) {
     super();
   }
 
@@ -134,7 +106,11 @@ export class ComercioCorresponsal extends Vendedor {
 
 // ⚡️⚡️
 export class CertificacionesVendedor {
-  constructor(public certProducto: number, public certVentas: number) {}
+  constructor(
+    public certProducto: number,
+    public certVentas: number,
+    public certDescuentos: number
+  ) {}
 }
 
 // ⚡️⚡️
@@ -150,16 +126,28 @@ export class CentroDeDistribucion {
       this.vendedores.push(vendedor);
       return true;
     } else {
+      // COMO SE RETORNA UN ERROR???
       return false;
     }
   }
 
   vendedorEstrella(): string {
-    return "raul";
+    // Que pasa si dos vendedores tienen los mismos puntajes???
+    // Debería devolver una lista?
+    let vendedorEstelar = "";
+    let puntajeMax = 0;
+    for (const vendedor of this.vendedores) {
+      if (sum(Object.values(vendedor.certificaciones)) > puntajeMax) {
+        puntajeMax = sum(Object.values(vendedor.certificaciones));
+        vendedorEstelar = vendedor.nombre;
+      }
+    }
+    return vendedorEstelar;
   }
 
   coberturaEnCiudad(): boolean {
-    return true;
+    //console.log(this.vendedores.ciudadOrigen));
+    return false;
   }
 
   vendedoresGenéricos(): string[] {

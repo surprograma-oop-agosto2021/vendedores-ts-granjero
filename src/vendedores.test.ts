@@ -26,8 +26,11 @@ describe("Vendedores", () => {
   const laMerced = new Ciudad(salta, "La Merced");
   const tartagal = new Ciudad(salta, "Tartagal");
   //Certificaciones
-  const certificacionesViajante = new CertificacionesVendedor(1, 2);
-  const certificacionesFijo = new CertificacionesVendedor(0, 2);
+  const certificacionesViajante = new CertificacionesVendedor(3, 9, 1);
+  const certificacionesFijo = new CertificacionesVendedor(0, 2, 1);
+  const certificacionesPepe = new CertificacionesVendedor(15, 2, 1);
+
+  const certificacionesCorresponsal = new CertificacionesVendedor(0, 0, 0);
 
   describe("1 - puede trabajar", () => {
     describe("vendedor fijo", () => {
@@ -83,7 +86,7 @@ describe("Vendedores", () => {
         suipacha,
         cafayate,
         laPlata,
-      ]);
+      ], certificacionesCorresponsal);
 
       it("una ciudad que queda en una provincia donde trabaja", () => {
         expect(corresponsal.puedeTrabajarEn(suipacha)).toBeTruthy();
@@ -104,7 +107,7 @@ describe("Vendedores", () => {
         suipacha,
         cafayate,
         laPlata,
-      ]);
+      ], certificacionesCorresponsal);
 
       it("una ciudad que queda en una provincia donde trabaja", () => {
         expect(corresponsal.puedeTrabajarEn(suipacha)).toBeTruthy();
@@ -122,17 +125,28 @@ describe("Vendedores", () => {
 
   describe("Centros de distribucion", () => {
     // Centros de distribucion
-    const vendedorPepe = new VendedorFijo('Pepe', caba, certificacionesFijo);
+    const vendedorPepe = new VendedorFijo('Pepe', caba, certificacionesPepe);
     const vendedorJose = new VendedorFijo('Jose', caba, certificacionesFijo);
     const centroDistribucionBalvanera = new CentroDeDistribucion(
       caba,
       [vendedorPepe]
     );
+
     it("agrego un vendedor posta", () => {
       expect(centroDistribucionBalvanera.agregarVendedor(vendedorJose)).toBeTruthy();
     });
+
     it("agrego el mismo vendedor y falla", () => {
       expect(centroDistribucionBalvanera.agregarVendedor(vendedorJose)).toBeFalsy();
     });
+
+    it("Vendedor Estrella", () => {
+      expect(centroDistribucionBalvanera.vendedorEstrella()).toBe('Pepe');
+    });
+
+    it("Cobertura en ciudad", () => {
+      expect(centroDistribucionBalvanera.coberturaEnCiudad()).toBeFalsy();
+    });
+
   });
 });
